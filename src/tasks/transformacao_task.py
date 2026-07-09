@@ -3,6 +3,7 @@ import unicodedata
 
 def transformacao(df_extraido):
     # Corrigir tipos de dados
+    df_em_transformacao = df_extraido
     df_em_transformacao = df_em_transformacao.astype(
         {
             "show_id": "string",
@@ -18,7 +19,7 @@ def transformacao(df_extraido):
     )
 
     # Remover duplicidade
-    df_em_transformacao = df_extraido.drop_duplicates()
+    df_em_transformacao = df_em_transformacao.drop_duplicates()
 
     # Padronizar textos
     colunas_texto = df_em_transformacao.select_dtypes(include=["string"]).columns
@@ -27,13 +28,13 @@ def transformacao(df_extraido):
         df_em_transformacao[coluna] = (
             df_em_transformacao[coluna]
             .str.strip()  # Remove espaços
-            .str.replace("\s+", " ", regex=True)  # Reduz espaços duplicados
+            .str.replace(r"\s+", " ", regex=True)  # Reduz espaços duplicados
             .str.lower()  # Padroniza maiusculas e minusculas
             .apply(
                 lambda x: remover_acentos(x) if x is not None else x
             )  # Remove acentos
             .str.replace(
-                "[^a-zA-Z0-9\s]", "", regex=True
+                r"[^a-zA-Z0-9\s]", "", regex=True
             )  # Remove caracteres especiais deixando apenas letras e números
         )
 
